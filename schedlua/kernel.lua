@@ -5,6 +5,7 @@
 --print("== KERNEL INCLUDED ==")
 
 local Scheduler = require("schedlua.scheduler")
+local PScheduler = require("schedlua.prior_sched")
 local Task = require("schedlua.task")
 --local Queue = require("queue")
 local Functor = require("schedlua.functor")
@@ -51,6 +52,11 @@ function Kernel.spawn(self, func, ...)
 	
 	return task;
 end
+
+function Kernel.pspawn(self, priority, func, ...)
+	local task = Task(func, ...)
+	task.TaskID = self:getNewTaskID();
+	self.PScheduler:scheduleTask(task, priority, {...});
 
 function Kernel.suspend(self, ...)
 	self.Scheduler:suspendCurrentFiber();
@@ -150,6 +156,7 @@ function Kernel.globalize()
     signalOne = Functor(Kernel.signalOne, Kernel);
 
     spawn = Functor(Kernel.spawn, Kernel);
+    pspawn = Functor(Kernel.pspawn, Kernel);
     suspend = Functor(Kernel.suspend, Kernel);
 
     waitForSignal = Functor(Kernel.waitForSignal, Kernel);
