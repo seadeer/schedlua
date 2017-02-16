@@ -101,7 +101,7 @@ end
 -- metamethod implemented.
 -- The 'params' is a table of parameters which will be passed to the function
 -- when it's ready to run.
-function Scheduler.scheduleTask(self, task, params, priority)
+function Scheduler.scheduleTask(self, priority, task, params)
 	--print("Scheduler.scheduleTask: ", task, params)
 	params = params or {}
 	
@@ -118,24 +118,6 @@ function Scheduler.scheduleTask(self, task, params, priority)
 	-- self.TasksReadyToRun:pinsert(task, priority_comp);
 
 
-	if priority == 0 then
-		self.TasksReadyToRun:pushFront(task);	
-	else
-		self.TasksReadyToRun:enqueue(task);	
-	end
-
-	task.state = "readytorun"
-
-	return task;
-end
-
-function Scheduler.scheduleTaskWithPriority(self, task, priority, params)
-	params = params or {}
-	if not task then
-		return false, "no task specified"
-	end
-
-	task:setParams(params);
 	if priority == 0 then
 		self.TasksReadyToRun:pushFront(task)
 	else
@@ -158,28 +140,6 @@ end
 
 function Scheduler.suspendCurrentTask(self, ...)
 	self.CurrentFiber.state = "suspended"
-end
-
-function Scheduler.yield(self)
-	-- print("Queue objects before suspend:")	
-	-- for k,v in pairs(self.TasksReadyToRun)
-	-- do
-	-- 	print("k", k);
-	-- 	print("v", v);
-	-- 	print("----");
-
-	-- end
-
-	self:suspendCurrentTask()
-
-	-- print("Queue objects after suspend:")	
-	-- for k,v in pairs(self.TasksReadyToRun)
-	-- do
-	-- 	print("k", k);
-	-- 	print("v", v);
-	-- 	print("----");
-
-	-- end
 end
 
 function Scheduler.step(self)
@@ -254,7 +214,8 @@ function Scheduler.step(self)
 	-- is if it's state is 'readytorun', otherwise, it will
 	-- stay out of the readytorun list.
 	if task.state == "readytorun" then
-		self:scheduleTask(task, results);
+	-- self, task, params, priority
+		self:scheduleTask(task.priority, task, results);
 	end
 end
 
