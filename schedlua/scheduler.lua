@@ -129,6 +129,24 @@ function Scheduler.scheduleTask(self, task, params, priority)
 	return task;
 end
 
+function Scheduler.scheduleTaskWithPriority(self, task, priority, params)
+	params = params or {}
+	if not task then
+		return false, "no task specified"
+	end
+
+	task:setParams(params);
+	if priority == 0 then
+		self.TasksReadyToRun:pushFront(task)
+	else
+		self.TasksReadyToRun:pinsert(task, priority_comp)
+	end
+
+	task.state = "readytorun"
+
+	return task;
+end
+
 function Scheduler.removeTask(self, task)
 	--print("REMOVING DEAD TASK: ", task);
 	return true;
@@ -140,6 +158,10 @@ end
 
 function Scheduler.suspendCurrentTask(self, ...)
 	self.CurrentFiber.state = "suspended"
+end
+
+function Scheduler.yield(self)
+	self:suspendCurrentTask()
 end
 
 function Scheduler.step(self)
