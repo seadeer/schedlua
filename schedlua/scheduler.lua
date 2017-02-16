@@ -161,7 +161,25 @@ function Scheduler.suspendCurrentTask(self, ...)
 end
 
 function Scheduler.yield(self)
+	-- print("Queue objects before suspend:")	
+	-- for k,v in pairs(self.TasksReadyToRun)
+	-- do
+	-- 	print("k", k);
+	-- 	print("v", v);
+	-- 	print("----");
+
+	-- end
+
 	self:suspendCurrentTask()
+
+	-- print("Queue objects after suspend:")	
+	-- for k,v in pairs(self.TasksReadyToRun)
+	-- do
+	-- 	print("k", k);
+	-- 	print("v", v);
+	-- 	print("----");
+
+	-- end
 end
 
 function Scheduler.step(self)
@@ -187,6 +205,7 @@ function Scheduler.step(self)
 	-- keeping track of the task, and rescheduling it when appropriate.
 	if task.state == "suspended" then
 		--print("suspended task wants to run")
+		
 		return true;
 	end
 
