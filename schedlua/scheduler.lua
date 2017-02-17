@@ -103,8 +103,8 @@ end
 -- when it's ready to run.
 function Scheduler.scheduleTask(self, task, params, priority)
 	--print("Scheduler.scheduleTask: ", task, params)
+	print(priority)
 	params = params or {}
-	
 	if not task then
 		return false, "no task specified"
 	end
@@ -213,7 +213,7 @@ function Scheduler.step(self)
 	-- is if it's state is 'readytorun', otherwise, it will
 	-- stay out of the readytorun list.
 	if task.state == "readytorun" then
-		self:scheduleTask(task, results);
+		self:scheduleTask(task, results, task.Priority);
 	end
 end
 

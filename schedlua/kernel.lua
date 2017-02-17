@@ -41,10 +41,14 @@ local function inMainTask()
 end
 
 local function coop(priority, func, ...)
+	-- print("coop routine started with priority", priority)
+	-- for k, v in ipairs{...} do
+	-- 	print(v)
+	-- end
 	local task = Task(func, ...)
 	task.TaskID = getNewTaskID();
 	task.Priority = priority;
-	return Kernel.Scheduler:scheduleTask(task, {...});
+	return Kernel.Scheduler:scheduleTask(task, {...}, priority);
 end
 
 local function spawn(func, ...)
