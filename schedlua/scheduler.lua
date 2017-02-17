@@ -103,7 +103,6 @@ end
 -- when it's ready to run.
 function Scheduler.scheduleTask(self, task, params, priority)
 	--print("Scheduler.scheduleTask: ", task, params)
-	print(priority)
 	params = params or {}
 	if not task then
 		return false, "no task specified"
@@ -117,14 +116,14 @@ function Scheduler.scheduleTask(self, task, params, priority)
 	-- as user code tasks
 	-- self.TasksReadyToRun:pinsert(task, priority_comp);
 
-
+	print("Enqueueing task:", task.Priority)
 	if priority == 0 then
 		self.TasksReadyToRun:pushFront(task);	
 	else
-		self.TasksReadyToRun:enqueue(task);	
+		self.TasksReadyToRun:pinsert(task, priority_comp);	
 	end
-
 	task.state = "readytorun"
+	print("Queue length now:", #self.TasksReadyToRun)
 
 	return task;
 end
@@ -145,7 +144,7 @@ end
 function Scheduler.step(self)
 	-- Now check the regular fibers
 	local task = self.TasksReadyToRun:dequeue()
-
+	print("Dequeueing:", task.Priority)
 	-- If no fiber in ready queue, then just return
 	if task == nil then
 		--print("Scheduler.step: NO TASK")

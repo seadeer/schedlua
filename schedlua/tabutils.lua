@@ -43,11 +43,10 @@ local function getIndex(t, value, fcomp)
    local iEnd = #t;
    local iMid = 1;
    local iState = 0;
-
+   
    while iStart <= iEnd do
       -- calculate middle
       iMid = floor( (iStart+iEnd)/2 );
-      
       -- compare
       if fcomp( value,t[iMid] ) then
             iEnd = iMid - 1;
