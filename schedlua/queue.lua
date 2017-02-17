@@ -98,5 +98,13 @@ function Queue:Entries(func, param)
 	return closure;
 end
 
+function Queue:print(prop)
+	local str = ""
+	for k, v in ipairs(self) do
+		local val = v[prop] or "null"
+		str = str.." "..val
+	end
+	print(str)
+end
 
 return Queue;
